@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import * as zod from 'zod'
 import { useForm } from 'react-hook-form'
 import { api } from '../../libs/axios'
@@ -30,7 +30,7 @@ export function Home() {
     await fetchPosts(data.query)
   }
 
-  async function fetchPosts(query: string = '') {
+  const fetchPosts = useCallback(async (query: string = '') => {
     const response = await api.get(
       `/search/issues?q=${query}%20repo:${
         import.meta.env.VITE_GITHUB_USERNAME
@@ -50,7 +50,7 @@ export function Home() {
     })
 
     setPosts(posts)
-  }
+  }, [])
 
   useEffect(() => {
     fetchPosts()

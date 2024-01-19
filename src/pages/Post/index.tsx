@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale/pt-BR'
 import { NavLink, useParams } from 'react-router-dom'
@@ -38,7 +38,7 @@ export function Post() {
     locale: ptBR,
   })
 
-  async function fetchPost() {
+  const fetchPost = useCallback(async () => {
     const response = await api.get(
       `/repos/${import.meta.env.VITE_GITHUB_USERNAME}/${
         import.meta.env.VITE_GITHUB_REPOSITORY
@@ -54,7 +54,7 @@ export function Post() {
       comments: data.comments,
       url: data.html_url,
     })
-  }
+  }, [id])
 
   useEffect(() => {
     fetchPost()
@@ -69,7 +69,7 @@ export function Post() {
             <span>Voltar</span>
           </NavLink>
 
-          <Link href={post?.url} text="Ver no github" />
+          <Link href={post?.url} target="_blank" text="Ver no github" />
         </Header>
 
         <h1>{post?.title}</h1>
